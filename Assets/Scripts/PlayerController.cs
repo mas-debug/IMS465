@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
         Ray ray = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
         RaycastHit hitInfo;
 
-        if (Physics.Raycast(ray, out hitInfo))
+        if (Physics.Raycast(ray, out hitInfo, 7.0f))
         {
             if (hitInfo.collider.TryGetComponent<IInteractable> (out var interactable))
             {
@@ -93,4 +93,46 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Hit nothing");
         }
     }
+<<<<<<< Updated upstream
+=======
+
+    private IEnumerator MoveParkour(Vector3 finalDestination, Vector3 currentPosition)
+    {
+        // make it so player cannot do other actions
+        isParkouring = true;
+
+        //resets elapsed time
+        elapsedTime = 0f;
+
+        float percentageComplete = 0f;
+        // loop to lerp
+
+        yield return null; 
+        while (percentageComplete < 1)
+        {
+            if (interactInput.WasPressedThisFrame())
+            { 
+                isParkouring = false;
+                Interact();
+                yield break;
+            }
+            //update percent complete frame rate independent
+            elapsedTime += Time.deltaTime;
+            percentageComplete = elapsedTime / duration;
+
+            // do lerp
+            transform.position = Vector3.Lerp(currentPosition, finalDestination, percentageComplete);
+            yield return null;
+        }
+        // turn off parkour
+        isParkouring = false;
+        // see if player is looking at other box and holding interact key
+        if (interactInput.IsPressed())
+        {
+            Interact();
+        }
+        
+
+    }
+>>>>>>> Stashed changes
 }
